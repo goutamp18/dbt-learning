@@ -10,3 +10,8 @@ dbt_packages/
 
 # Credentials
 profiles.yml
+
+# dbt generated files
+logs/
+target/
+dbt_packages/
