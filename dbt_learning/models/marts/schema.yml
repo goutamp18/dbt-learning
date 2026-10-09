@@ -1,0 +1,83 @@
+
+version: 2
+
+models:
+
+  - name: dim_customers
+    description: "Customer dimension containing customer attributes."
+    columns:
+      - name: customer_id
+        description: "Unique identifier for the customer."
+        tests:
+          - not_null
+          - unique
+
+      - name: email
+        description: "Customer email address."
+        tests:
+          - not_null
+
+  - name: dim_products
+    description: "Product dimension containing product attributes."
+    columns:
+      - name: product_id
+        description: "Unique identifier for the product."
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_orders
+    description: "Order fact table. Grain is one row per order."
+    columns:
+      - name: order_id
+        description: "Unique identifier for the order."
+        tests:
+          - not_null
+          - unique
+
+      - name: customer_id
+        description: "Customer who placed the order."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customers')
+                field: customer_id
+
+      - name: status
+        description: "Current status of the order."
+        tests:
+          - accepted_values:
+              arguments:
+                values:
+                  - completed
+                  - pending
+                  - cancelled
+
+  - name: fct_order_items
+    description: "Order item fact table. Grain is one row per order item."
+    columns:
+      - name: order_item_id
+        description: "Unique identifier for the order item."
+        tests:
+          - not_null
+          - unique
+
+      - name: order_id
+        description: "Order associated with the item."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('fct_orders')
+                field: order_id
+
+      - name: product_id
+        description: "Product associated with the item."
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_products')
+                field: product_id
+

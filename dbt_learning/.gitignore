@@ -1,0 +1,12 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# dbt generated files
+target/
+logs/
+dbt_packages/
+
+# Credentials
+profiles.yml
